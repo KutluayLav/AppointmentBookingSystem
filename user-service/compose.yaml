@@ -1,0 +1,11 @@
+services:
+  mysql:
+    container_name: 'userdb-container'
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=userdb'
+      - 'MYSQL_PASSWORD=root'
+      - 'MYSQL_ROOT_PASSWORD=root'
+      - 'MYSQL_USER=root'
+    ports:
+      - '3306:3306'
