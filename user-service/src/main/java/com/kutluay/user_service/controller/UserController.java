@@ -2,20 +2,44 @@ package com.kutluay.user_service.controller;
 
 
 import com.kutluay.user_service.model.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.kutluay.user_service.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
 
 
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/api/createUser")
+    public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
+        return ResponseEntity.ok(userService.save(user));
+    }
+
     @GetMapping("/api/users")
-    public User getUser(){
-        User user = new User();
-        user.setEmail("kutluay@gmail.com");
-        user.setFullName("kutluay ulutas");
-        user.setPhone("29013980219830");
-        user.setRole("customer");
-        return user;
+    public ResponseEntity<List<User>> getUsers(){
+        return ResponseEntity.ok(userService.findAll());
+    }
+
+    @GetMapping("/api/users/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable("userId") Long id) {
+        return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @DeleteMapping("/api/users/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.deleteUser(id));
+    }
+    @PutMapping("/api/users/{id}")
+    public ResponseEntity<User> updateUserById(@PathVariable Long id, @RequestBody User user) throws Exception {
+        return ResponseEntity.ok(userService.updateUser(id,user));
     }
 }
