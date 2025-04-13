@@ -1,5 +1,6 @@
 package com.kutluay.user_service.service;
 
+import com.kutluay.user_service.exception.UserException;
 import com.kutluay.user_service.model.User;
 import com.kutluay.user_service.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -22,14 +23,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User findById(Long id) {
+    public User findById(Long id) throws Exception {
 
         Optional<User> user = userRepository.findById(id);
 
-        if (user.isPresent()) {
-            return user.get();
+        if (!user.isPresent()) {
+            throw new UserException("User not found");
         }
-        return null;
+
+        return user.get();
     }
     public List<User> findAll() {
         return userRepository.findAll();
@@ -51,7 +53,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isEmpty()) {
-            throw new Exception("User not found with id");
+            throw new UserException("User not found with id");
         }
 
         User existingUser = userOptional.get();

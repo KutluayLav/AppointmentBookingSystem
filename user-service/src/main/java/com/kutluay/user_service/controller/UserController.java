@@ -29,8 +29,8 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping("/api/users/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable("userId") Long id) {
+    @GetMapping("/api/user/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable("userId") Long id) throws Exception {
         return ResponseEntity.ok(userService.findById(id));
     }
 
