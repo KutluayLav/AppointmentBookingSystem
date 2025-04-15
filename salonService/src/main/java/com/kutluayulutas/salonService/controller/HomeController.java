@@ -9,6 +9,6 @@ public class HomeController {
 
     @GetMapping
     public String HomeControllerHandler(){
-        return "User Microservice for salon booking system";
+        return "Salon Microservice for salon booking system";
     }
 }
