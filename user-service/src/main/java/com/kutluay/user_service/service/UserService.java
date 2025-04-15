@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     private final UserRepository userRepository;
 
@@ -19,11 +19,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User save(User user) {
+    @Override
+    public User createUser(User user) {
         return userRepository.save(user);
     }
 
-    public User findById(Long id) throws Exception {
+    @Override
+    public User getUserById(Long id) throws Exception {
 
         Optional<User> user = userRepository.findById(id);
 
@@ -33,10 +35,17 @@ public class UserService {
 
         return user.get();
     }
-    public List<User> findAll() {
+    @Override
+    public List<User> findAll() throws UserException {
+
+        if (userRepository.findAll().isEmpty()) {
+            throw new UserException("Users are Empty");
+        }
+
         return userRepository.findAll();
     }
 
+    @Override
     public String deleteUser(Long id) {
 
         Optional<User> user = userRepository.findById(id);
@@ -47,7 +56,7 @@ public class UserService {
 
         return "User cannot be found";
     }
-
+    @Override
     public User updateUser(@PathVariable Long id,@RequestBody User user) throws Exception {
 
         Optional<User> userOptional = userRepository.findById(id);
@@ -62,6 +71,7 @@ public class UserService {
         existingUser.setEmail(user.getEmail());
         existingUser.setPhone(user.getPhone());
         existingUser.setRole(user.getRole());
+        existingUser.setUserName(user.getUserName());
 
         return userRepository.save(user);
     }
