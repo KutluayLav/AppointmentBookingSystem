@@ -10,11 +10,11 @@ public interface ISalonService {
 
     Salon createSalon(SalonDTO salon, UserDTO user);
 
-    Salon updateSalon(SalonDTO salon, UserDTO user, Long salonId);
+    Salon updateSalon(SalonDTO salon, UserDTO user, Long salonId) throws Exception;
 
     List<Salon> findAllSalons();
 
-    Salon findSalonById(Long salonId);
+    Salon findSalonById(Long salonId) throws Exception;
 
     Salon getSalonByOwnerId(Long ownerId);
 
