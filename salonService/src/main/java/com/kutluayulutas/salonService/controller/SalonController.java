@@ -47,17 +47,14 @@ public class SalonController {
         return ResponseEntity.ok(salonDTOResponse);
     }
 
-    @GetMapping
+    @GetMapping("/getSalons")
     public ResponseEntity<List<SalonDTO>> findAllSalons(@RequestBody SalonDTO salonDTO) throws Exception {
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1L);
+        List<Salon> salons =salonService.findAllSalons();
 
-        List<Salon> salon =salonService.findAllSalons();
-
-        List<SalonDTO> salonDTOList = salon.stream().map((salon1) ->
+        List<SalonDTO> salonDTOList = salons.stream().map((salon) ->
                 {
-                    SalonDTO salonDTOResponse = SalonMapper.mapToDTO(salon1);
+                    SalonDTO salonDTOResponse = SalonMapper.mapToDTO(salon);
                     return salonDTOResponse;
                 }
         ).toList();
@@ -65,4 +62,48 @@ public class SalonController {
 
         return ResponseEntity.ok(salonDTOList);
     }
+
+    @GetMapping("/{salonId}")
+    public ResponseEntity<SalonDTO> getSalonById(@PathVariable Long salonId) throws Exception {
+
+        Salon salon = salonService.findSalonById(salonId);
+
+        SalonDTO salonDTOResponse = SalonMapper.mapToDTO(salon);
+
+        return ResponseEntity.ok(salonDTOResponse);
+
+    }
+
+    //http://localhost:5002/api/salons/search?city=
+    @GetMapping("/search")
+    public ResponseEntity<List<SalonDTO>> searchSalons(
+            @RequestParam("city") String city)
+            throws Exception {
+
+        List<Salon> salons =salonService.searchSalonByCity(city);
+
+        List<SalonDTO> salonDTOList = salons.stream().map((salon) ->
+                {
+                    SalonDTO salonDTOResponse = SalonMapper.mapToDTO(salon);
+                    return salonDTOResponse;
+                }
+        ).toList();
+
+
+        return ResponseEntity.ok(salonDTOList);
+    }
+
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<SalonDTO> getSalonByOwnerId() throws Exception {
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(1L);
+
+        Salon salon = salonService.getSalonByOwnerId(userDTO.getId());
+
+        SalonDTO salonDTOResponse = SalonMapper.mapToDTO(salon);
+
+        return ResponseEntity.ok(salonDTOResponse);
+    }
+
 }
