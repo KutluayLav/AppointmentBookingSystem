@@ -48,7 +48,7 @@ public class SalonController {
     }
 
     @GetMapping("/getSalons")
-    public ResponseEntity<List<SalonDTO>> findAllSalons(@RequestBody SalonDTO salonDTO) throws Exception {
+    public ResponseEntity<List<SalonDTO>> findAllSalons() throws Exception {
 
         List<Salon> salons =salonService.findAllSalons();
 
@@ -58,7 +58,6 @@ public class SalonController {
                     return salonDTOResponse;
                 }
         ).toList();
-
 
         return ResponseEntity.ok(salonDTOList);
     }
