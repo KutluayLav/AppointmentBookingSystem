@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="salonService" />
         <module name="user-service" />
+        <module name="service-offering" />
         <module name="categoryservice" />
       </profile>
     </annotationProcessing>
@@ -17,6 +18,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="categoryservice" options="-parameters" />
       <module name="salonService" options="-parameters" />
+      <module name="service-offering" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>
