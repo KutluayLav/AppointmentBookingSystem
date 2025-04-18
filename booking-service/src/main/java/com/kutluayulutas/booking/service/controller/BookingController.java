@@ -1,17 +1,17 @@
 package com.kutluayulutas.booking.service.controller;
 
 
-import com.kutluayulutas.booking.service.dto.BookingRequest;
-import com.kutluayulutas.booking.service.dto.ServiceOfferDto;
-import com.kutluayulutas.booking.service.dto.UserDTO;
-import com.kutluayulutas.booking.service.dto.BookingDTO;
-import com.kutluayulutas.booking.service.dto.SalonDTO;
+import com.kutluayulutas.booking.service.domain.BookingStatus;
+import com.kutluayulutas.booking.service.dto.*;
 import com.kutluayulutas.booking.service.mapper.BookingMapper;
 import com.kutluayulutas.booking.service.modal.Booking;
+import com.kutluayulutas.booking.service.modal.SalonReport;
 import com.kutluayulutas.booking.service.service.BookingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,15 +30,17 @@ public class BookingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest bookingRequest,
-                                                 @RequestParam Long salonId) throws Exception {
+    public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest bookingRequest
+                                                 ) throws Exception {
 
         // feign client ile yapılacak userDTO ve SalonDTO open feignclient = comminication between microservices
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1L);
 
         SalonDTO salonDTO = new SalonDTO();
-        salonDTO.setId(salonId);
+        salonDTO.setId(1L);
+        salonDTO.setStartTime(LocalTime.now());
+        salonDTO.setEndTime(LocalTime.now().plusHours(12));
 
         Set<ServiceOfferDto> serviceOfferDtoSet = new HashSet<>();
     // feignclient
@@ -88,9 +90,44 @@ public class BookingController {
     }
 
 
+    @PutMapping("/{bookingId}/status")
+    public ResponseEntity<BookingDTO> updateBookingStatus(@PathVariable Long bookingId,
+                                                          @RequestParam BookingStatus bookingStatus
+                                                          ) throws Exception {
+
+        Booking booking = bookingService.updateBooking(bookingId, bookingStatus);
+
+        return ResponseEntity.ok(BookingMapper.toBookingDTO(booking));
+
+    }
 
 
+    @GetMapping("/slots/salon/{salonId}/date/{date}")
+    public ResponseEntity<List<BookingSlotDTO>> getBookedSlot(@PathVariable Long salonId,
+                                                    @RequestParam(required = false) LocalDate date
+                                                    ) throws Exception {
 
+        List<Booking> bookings = bookingService.getBookingsByDate(date ,salonId);
+
+        List<BookingSlotDTO> slotDTOS =bookings.stream()
+                .map(booking -> {
+                    BookingSlotDTO bookingSlotDTO = new BookingSlotDTO();
+                    bookingSlotDTO.setStartTime(booking.getStartDateTime());
+                    bookingSlotDTO.setEndTime(booking.getEndDateTime());
+                    return bookingSlotDTO;
+                }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(slotDTOS);
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<SalonReport> getSalonReport() throws Exception {
+
+        SalonReport salonReport = bookingService.getSalonReport(1L);
+
+        return ResponseEntity.ok(salonReport);
+
+    }
 
 
 
