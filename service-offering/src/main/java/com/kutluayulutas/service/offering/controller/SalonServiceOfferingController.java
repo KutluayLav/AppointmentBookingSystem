@@ -6,10 +6,7 @@ import com.kutluayulutas.service.offering.dto.ServiceOfferDto;
 import com.kutluayulutas.service.offering.model.ServiceOffering;
 import com.kutluayulutas.service.offering.service.ServiceOfferingService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/service-offering/salon-owner")
@@ -22,7 +19,7 @@ public class SalonServiceOfferingController {
     }
 
 
-    @PostMapping("")
+    @PostMapping()
     public ResponseEntity<ServiceOffering> saveServiceOffering(@RequestBody ServiceOfferDto serviceOfferDto) {
 
         SalonDTO salonDTO = new SalonDTO();
@@ -34,6 +31,23 @@ public class SalonServiceOfferingController {
 
         ServiceOffering serviceOffering = serviceOfferingService
                 .createServiceOffering(salonDTO,serviceOfferDto,categoryDTO);
+
+        return ResponseEntity.ok(serviceOffering);
+
+    }
+
+    @PostMapping("/{serviceId}")
+    public ResponseEntity<ServiceOffering> updateServiceOffering(@PathVariable Long serviceId,
+                                                                 @RequestBody ServiceOffering serviceOffer) throws Exception {
+
+        SalonDTO salonDTO = new SalonDTO();
+        salonDTO.setId(1L);
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setId(1L);
+
+        ServiceOffering serviceOffering = serviceOfferingService
+                .updateServiceOffering(serviceId,serviceOffer);
 
         return ResponseEntity.ok(serviceOffering);
 

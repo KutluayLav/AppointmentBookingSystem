@@ -36,5 +36,4 @@ public class ServiceOffering {
     private String image;
 
 
-
 }

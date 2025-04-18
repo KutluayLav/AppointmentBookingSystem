@@ -11,11 +11,13 @@
         <module name="user-service" />
         <module name="service-offering" />
         <module name="categoryservice" />
+        <module name="booking-service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="booking-service" options="-parameters" />
       <module name="categoryservice" options="-parameters" />
       <module name="salonService" options="-parameters" />
       <module name="service-offering" options="-parameters" />
