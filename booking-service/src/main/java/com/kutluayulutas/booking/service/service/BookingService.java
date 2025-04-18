@@ -155,6 +155,6 @@ public class BookingService implements IBookingService {
     }
 
     private boolean isSameDate(LocalDateTime dateTime, LocalDate date) {
-        return dateTime.toLocalDate().isEqual(date.toLocalDate());
+        return dateTime.toLocalDate().isEqual(date);
     }
 }
